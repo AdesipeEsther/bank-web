@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+{% block title %} SapaBank {% endblock title %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if request.user.is_authenticated %}
+<div class="container">
+    
+    <p> Welcome {{request.user.account.full_name}} to SaPA-BANK.....!🤑 </p>
+    <main>
+        <section class="form-section">
+            <h2>Deposit</h2>
+            <form id="deposit-form">
+                <label for="deposit-amount">Amount:</label>
+                <input type="number" id="deposit-amount" required>
+                <button type="submit">Deposit</button>
+            </form>
+        </section>
+
+        <section class="form-section">
+            <h2>Withdraw</h2>
+            <form id="withdraw-form">
+                <label for="withdraw-amount">Amount:</label>
+                <input type="number" id="withdraw-amount" required>
+                <button type="submit">Withdraw</button>
+            </form>
+        </section>
+
+        <section class="form-section">
+            <h2>Transfer</h2>
+            <form id="transfer-form" method="POST" action="transfer/">
+                {% csrf_token %}
+                <label for="transfer-to">Transfer To:</label>
+                <input type="text" id="transfer-to" name="account" required>
+                <label for="transfer-amount">Amount:</label>
+                <input type="number" id="transfer-amount" name="amount" required>
+                <button type="submit">Transfer</button>
+            </form>
+        </section>
+
+        <section class="balance-section">
+            <h2>Current Balance: <span id="balance-amount">₦{{request.user.account.account_balance}}</span></h2>
+        </section>
+    </main>
+</div>
+{% else %}
+    <p>Login mumu</p>
+{% endif %}
+
+{% endblock content %}
+
+{% block footer %}
+<footer>
+    <p>&copy; 2024 Sapa Bank. All rights reserved.</p>
+    <p><a href="{% url 'privacy' %}">Privacy Policy</a> | <a href="{% url 'terms' %}">Terms and Conditions</a></p>
+</footer>
+{% endblock %}
